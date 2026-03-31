@@ -11,9 +11,11 @@
 
 ### Дефолтные настройки предустановленной на eMMC FriendlyWrt
 
+```
 LAN IP: 192.168.2.1
-USER: root
-PASS: password
+  USER: root
+  PASS: password
+```
 
 ### Сброс FriendlyWrt к дефолтным настройкам
 
