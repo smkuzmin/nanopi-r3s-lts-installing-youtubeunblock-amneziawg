@@ -1,4 +1,4 @@
-## NanoPi R3S LTS. Установка youtubeUnblock
+## NanoPi R3S LTS: Установка youtubeUnblock
 
 ### Ссылки
 
