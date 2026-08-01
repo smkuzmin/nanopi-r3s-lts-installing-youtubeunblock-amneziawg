@@ -1,5 +1,6 @@
 ## NanoPi R3S LTS: Установка youtubeUnblock
 
+
 ### Ссылки
 
 - [Wiki](https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R3S#Introduction)
@@ -118,15 +119,22 @@ opkg install --force-depends ./youtubeUnblock.ipk ./luci-app-youtubeUnblock.ipk
 /etc/init.d/youtubeUnblock start
 
 # Отключаем IPv6
-#. /root/setup.sh
-#disable_ipv6
+uci set network.lan.ipv6='off'
+uci set network.lan.ip6assign=''
+uci set network.lan.delegate='0'
+uci set network.wan.ipv6='0'
+uci set network.wan.delegate='0'
+uci -q get network.wan6 && uci delete network.wan6
+uci commit network
+ifdown wan && ifup wan
+
+# Отключаем DHCPv6/RA в LAN
 uci set dhcp.lan.dhcpv6='disabled'
-uci set dhcp.lan.ra='disabled'
 uci set dhcp.lan.ndp='disabled'
-uci set network.globals.packet_steering='0' 2>/dev/null
+uci set dhcp.lan.ra='disabled'
 uci commit dhcp
-/etc/init.d/odhcpd stop
-/etc/init.d/odhcpd disable
+/etc/init.d/odhcpd stop    2>/dev/nul
+/etc/init.d/odhcpd disable 2>/dev/nul
 
 # Перезагружаемся
 reboot
