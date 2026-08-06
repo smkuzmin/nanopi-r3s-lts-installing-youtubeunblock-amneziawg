@@ -156,9 +156,7 @@ wget -qO /tmp/luci-app-youtubeUnblock.ipk "${URL}/luci-app-youtubeUnblock-1.3.0-
 ARCH=$(opkg print-architecture | awk 'END{print $2}')
 echo "System architecture: $ARCH"
 if ! opkg install /tmp/youtubeUnblock.ipk /tmp/luci-app-youtubeUnblock.ipk; then
-  echo "ERROR: Failed to install youtubeUnblock."
-  echo "Perhaps the packages were built for a different architecture."
-  echo "Download the correct .ipk files for your architecture."
+  echo "ERROR: Failed to install youtubeUnblock"
   exit 1
 fi
 rm -f /tmp/*.ipk
