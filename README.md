@@ -164,30 +164,28 @@ reboot
 (
   ### Обновляем списки пакетов
   # System -> Software -> Update lists..
-  opkg update || { echo 'OPKG UPDATE ERROR'; exit 1; }
+  opkg update || { echo 'ERROR: opkg update'; exit 1; }
 
   ### Устанавливаем зависимости для youtubeUnblock
   # System -> Software -> Download and install package: kmod-nfnetlink-queue -> OK -> Install -> Dismiss
   # System -> Software -> Download and install package: kmod-nft-queue       -> OK -> Install -> Dismiss
   # System -> Software -> Download and install package: kmod-nf-conntrack    -> OK -> Install -> Dismiss
-  opkg install kmod-nfnetlink-queue kmod-nft-queue kmod-nf-conntrack
+  opkg install kmod-nfnetlink-queue kmod-nft-queue kmod-nf-conntrack || { echo 'ERROR: opkg install youtubeUnblock depends'; exit 1; }
 
   ### Скачиваем и устанавливаем пакеты youtubeUnblock для OpenWrt 24.10
   # System -> Software -> Upload Package.. -> Browse.. -> youtubeUnblock-1.3.1-1-4a223b0-aarch64_generic-openwrt-24.10.ipk -> Upload -> Install -> Dismiss
   # System -> Software -> Upload Package.. -> Browse.. -> luci-app-youtubeUnblock-1.3.1-1-4a223b0.ipk -> Upload -> Install -> Dismiss
    VERSION='1.3.1'
   BASE_URL="https://github.com/Waujito/youtubeUnblock/releases/download/v${VERSION}"
-     BUILD="1-4a223b0"
+     BUILD='1-4a223b0'
       ARCH=$(opkg print-architecture|awk 'END{print $2}')
   pkg="youtubeUnblock-${VERSION}-${BUILD}-${ARCH}-openwrt-24.10"
-  url="${BASE_URL}/${pkg}.ipk"
-  wget -qO     "/tmp/${pkg}.ipk" "${url}" || { echo "DOWNLOAD ERROR: ${url}"; exit 1; }
-  opkg install "/tmp/${pkg}.ipk"          || { echo "INSTALL ERROR: ${pkg}" ; exit 1; }
+  wget -qO     "/tmp/${pkg}.ipk" "${BASE_URL}/${pkg}.ipk" || { echo "ERROR: Download url: ${url}"; exit 1; }
+  opkg install "/tmp/${pkg}.ipk"                          || { echo "ERROR: Install pkg: ${pkg}" ; exit 1; }
   rm -f        "/tmp/${pkg}.ipk"
   pkg="luci-app-youtubeUnblock-${VERSION}-${BUILD}"
-  url="${BASE_URL}/${pkg}.ipk"
-  wget -qO     "/tmp/${pkg}.ipk" "${url}" || { echo "DOWNLOAD ERROR: ${url}"; exit 1; }
-  opkg install "/tmp/${pkg}.ipk"          || { echo "INSTALL ERROR: ${pkg}" ; exit 1; }
+  wget -qO     "/tmp/${pkg}.ipk" "${BASE_URL}/${pkg}.ipk" || { echo "ERROR: Download url: ${url}"; exit 1; }
+  opkg install "/tmp/${pkg}.ipk"                          || { echo "ERROR: Install pkg: ${pkg}" ; exit 1; }
   rm -f        "/tmp/${pkg}.ipk"
 
   ### Отключаем Routing/NAT Offloading (он должен быть выключен для работы любых DPI-обходчиков на базе nfqws)
@@ -197,7 +195,7 @@ reboot
 
   ### Применяем изменения
   uci commit
-  /etc/init.d/firewall restart
+  /etc/init.d/firewall reload
 
   ### Включаем youtubeUnblock в автозагрузку
   # System -> Startup -> youtubeUnblock -> Enabled
@@ -251,27 +249,27 @@ reboot
   KERNEL=$(uname -r|cut -d. -f1,2)
   case "$ARCH" in
     mips_24kc)  # MikroTik на платформе MIPSBE
-      V="24.10.8"; B="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${V}"; A="mips_24kc_ath79_mikrotik"
-      download_and_install "kmod-amneziawg"        "${B}/kmod-amneziawg_v${V}_${A}.ipk"
-      download_and_install "amneziawg-tools"       "${B}/amneziawg-tools_v${V}_${A}.ipk"
-      download_and_install "luci-proto-amneziawg"  "${B}/luci-proto-amneziawg_v${V}_${A}.ipk" ;;
+      V='24.10.8'; B="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${V}"; A='mips_24kc_ath79_mikrotik'
+      download_and_install 'kmod-amneziawg'        "${B}/kmod-amneziawg_v${V}_${A}.ipk"
+      download_and_install 'amneziawg-tools'       "${B}/amneziawg-tools_v${V}_${A}.ipk"
+      download_and_install 'luci-proto-amneziawg'  "${B}/luci-proto-amneziawg_v${V}_${A}.ipk" ;;
     aarch64_cortex-a53)  # NanoPi R3S LTS
       case "$KERNEL" in
-        "6.1") KV="1.0.20260611"; KB="https://github.com/lastharbor/kmod-amneziawg-nanopi-r5c/releases/download/v${KV}-r1" ;;
-        "6.6") KV="3.1.20260812"; KB="https://github.com/lastharbor/kmod-amneziawg-nanopi-r5c/releases/download/v${KV}"    ;;
+        '6.1') KV='1.0.20260611'; KB="https://github.com/lastharbor/kmod-amneziawg-nanopi-r5c/releases/download/v${KV}-r1" ;;
+        '6.6') KV='3.1.20260812'; KB="https://github.com/lastharbor/kmod-amneziawg-nanopi-r5c/releases/download/v${KV}"    ;;
             *) echo "ERROR: Unsupported kernel version: $KERNEL"; exit 1 ;;
       esac
-      KV="$KV-r1"                                                                                ; KA="aarch64_generic"
-      UV="24.10.8"; UB="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${UV}"; UA="aarch64_generic_rockchip_armv8"
-      download_and_install "kmod-amneziawg"       "${KB}/kmod-amneziawg_${KV}_${KA}.ipk"
-      download_and_install "amneziawg-tools"      "${UB}/amneziawg-tools_v${UV}_${UA}.ipk"
-      download_and_install "luci-proto-amneziawg" "${UB}/luci-proto-amneziawg_v${UV}_${UA}.ipk" ;;
+      KV="$KV-r1"                                                                                ; KA='aarch64_generic'
+      UV='24.10.8'; UB="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${UV}"; UA='aarch64_generic_rockchip_armv8'
+      download_and_install 'kmod-amneziawg'       "${KB}/kmod-amneziawg_${KV}_${KA}.ipk"
+      download_and_install 'amneziawg-tools'      "${UB}/amneziawg-tools_v${UV}_${UA}.ipk"
+      download_and_install 'luci-proto-amneziawg' "${UB}/luci-proto-amneziawg_v${UV}_${UA}.ipk" ;;
     *) echo "ERROR: Unsupported architecture: $ARCH"; exit 1 ;;
   esac
+  echo 'Installation succesfull. Rebooting...'
 
   ### Перезагружаемся
   # System -> Reboot -> Perform reboot
-  echo 'Installation succesfull. Rebooting...'
   reboot
 )
 ```
