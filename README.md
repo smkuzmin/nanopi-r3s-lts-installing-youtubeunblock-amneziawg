@@ -173,8 +173,8 @@ reboot
   opkg install kmod-nfnetlink-queue kmod-nft-queue kmod-nf-conntrack || { echo 'ERROR: opkg install youtubeUnblock depends'; exit 1; }
 
   ### Скачиваем и устанавливаем пакеты youtubeUnblock для OpenWrt 24.10
-  # System -> Software -> Upload Package.. -> Browse.. -> youtubeUnblock-1.3.1-1-4a223b0-aarch64_generic-openwrt-24.10.ipk -> Upload -> Install -> Dismiss
-  # System -> Software -> Upload Package.. -> Browse.. -> luci-app-youtubeUnblock-1.3.1-1-4a223b0.ipk -> Upload -> Install -> Dismiss
+  # System -> Software -> Upload Package.. -> Browse.. -> youtubeUnblock-*.ipk -> Upload -> Install -> Dismiss
+  # System -> Software -> Upload Package.. -> Browse.. -> luci-app-youtubeUnblock-*.ipk -> Upload -> Install -> Dismiss
    VERSION='1.3.1'
   BASE_URL="https://github.com/Waujito/youtubeUnblock/releases/download/v${VERSION}"
      BUILD='1-4a223b0'
