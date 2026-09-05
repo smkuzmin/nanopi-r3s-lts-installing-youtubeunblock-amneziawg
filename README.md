@@ -1,4 +1,9 @@
-## NanoPi R3S LTS: Установка youtubeUnblock или клиента AmneziaWG
+## OpenWrt: Установка youtubeUnblock или клиента AmneziaWG
+
+Инструкция предназначена для роутеров:
+
+- Любой MikroTik с архитектурой MIPSBE, прошитый в OpenWrt 24.10
+- Nano Pi R3S LTS c установленной FriendlyWrt 24.10
 
 ## Установка youtubeUnblock
 
