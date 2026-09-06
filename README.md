@@ -3,6 +3,7 @@
 Инструкция предназначена для роутеров:
 
 - Любой MikroTik с архитектурой MIPSBE, прошитый в OpenWrt 24.10
+- Nano Pi R3S LTS c установленной OpenWrt 24.10
 - Nano Pi R3S LTS c установленной FriendlyWrt 24.10
 
 ## Установка youtubeUnblock
@@ -16,15 +17,22 @@
 |             | **OpenWrt**   | **FriendlyWrt** |
 | ----------- | ------------- | --------------- |
 | **WAN IP**: | Dynamic       | Dynamic         |
-| **LAN IP**: | `192.168.1.1` | 192.168.2.1     |
+| **LAN IP**: | `192.168.1.1` | `192.168.2.1`   |
 | **USER**:   | `root`        | `root`          |
 | **PASS**:   |               | `password`      |
 
 3. Подключаемся к устройству по протоколу **SSH** через терминал [PuTTY](https://the.earth.li/~sgtatham/putty/latest/w32/putty.exe):
-  - **OpenWrt**: `putty.exe 192.168.1.1 -l root`
-  - **FriendlyWrt**: `putty.exe 192.168.2.1 -l root -pw password`
 
-4. Следующие этапы подразумевают подключение к устройству через терминал и выполнение в нем указанных блоков кода.
+  - Команда для **OpenWrt**:
+  ```powershell
+  putty.exe 192.168.1.1 -l root
+  ```
+  - Команда для **FriendlyWrt**:
+  ```powershell
+  putty.exe 192.168.2.1 -l root -pw password
+  ```
+
+Следующие этапы подразумевают подключение к устройству через терминал и выполнение в нем указанных блоков кода.
 
 ### 2. Сбрасываем OpenWrt к дефолтным настройкам и перезагружаемся
 
@@ -263,12 +271,17 @@ reboot
   ARCH=$(opkg print-architecture|awk 'END{print $2}')
   KERNEL=$(uname -r|cut -d. -f1,2)
   case "$ARCH" in
-    mips_24kc)  # MikroTik на платформе MIPSBE
+    mips_24kc)  # MikroTik на платформе MIPSBE (OpenWrt)
       V='24.10.8'; B="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${V}"; A='mips_24kc_ath79_mikrotik'
-      download_and_install 'kmod-amneziawg'        "${B}/kmod-amneziawg_v${V}_${A}.ipk"
-      download_and_install 'amneziawg-tools'       "${B}/amneziawg-tools_v${V}_${A}.ipk"
-      download_and_install 'luci-proto-amneziawg'  "${B}/luci-proto-amneziawg_v${V}_${A}.ipk" ;;
-    aarch64_cortex-a53)  # NanoPi R3S LTS
+      download_and_install 'kmod-amneziawg'       "${B}/kmod-amneziawg_v${V}_${A}.ipk"
+      download_and_install 'amneziawg-tools'      "${B}/amneziawg-tools_v${V}_${A}.ipk"
+      download_and_install 'luci-proto-amneziawg' "${B}/luci-proto-amneziawg_v${V}_${A}.ipk" ;;
+    aarch64_generic)  # NanoPi R3S LTS (OpenWrt)
+      V='24.10.8'; B="https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v${V}"; A='aarch64_generic_rockchip_armv8'
+      download_and_install 'kmod-amneziawg'       "${B}/kmod-amneziawg_v${V}_${A}.ipk"
+      download_and_install 'amneziawg-tools'      "${B}/amneziawg-tools_v${V}_${A}.ipk"
+      download_and_install 'luci-proto-amneziawg' "${B}/luci-proto-amneziawg_v${V}_${A}.ipk" ;;
+    aarch64_cortex-a53)  # NanoPi R3S LTS (FriendlyWrt)
       case "$KERNEL" in
         '6.1') KV='1.0.20260611'; KB="https://github.com/lastharbor/kmod-amneziawg-nanopi-r5c/releases/download/v${KV}-r1" ;;
         '6.6') KV='3.1.20260812'; KB="https://github.com/lastharbor/kmod-amneziawg-nanopi-r5c/releases/download/v${KV}"    ;;
