@@ -177,10 +177,6 @@ reboot
 
 ```bash
 (
-  ### Установка youtubeUnblock. Поддерживаемые устройства:
-  # - Любой MikroTik с архитектурой MIPSBE, прошитый в OpenWrt 24.10
-  # - Nano Pi R3S LTS c установленной FriendlyWrt 24.10
-
   ### Обновляем списки пакетов
   # System -> Software -> Update lists..
   opkg update || { echo 'ERROR: opkg update'; exit 1; }
@@ -240,10 +236,6 @@ reboot
 
 ```bash
 (
-  ### Установка клиента AmneziaWG. Поддерживаемые устройства:
-  # - Любой MikroTik с архитектурой MIPSBE, прошитый в OpenWrt 24.10
-  # - Nano Pi R3S LTS c установленной FriendlyWrt 24.10
-
   ### Обновляем списки пакетов
   # System -> Software -> Update lists..
   opkg update || { echo 'ERROR: opkg update'; exit 1; }
